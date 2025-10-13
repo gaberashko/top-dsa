@@ -163,6 +163,88 @@ function replicate(n, val) {
     return [val, ...replicate(n - 1, val)];
 }
 
-console.log(replicate(3, 5)); // [5, 5, 5]
-console.log(replicate(1, 69)); // [69]
-console.log(replicate(-2, 6)); // []
+// console.log(replicate(3, 5)); // [5, 5, 5]
+// console.log(replicate(1, 69)); // [69]
+// console.log(replicate(-2, 6)); // []
+
+// Iterative fibonacci sequence solution.
+function fibs(n) {
+    let numSequence = [];
+    for (let i = 0; i < n; ++i) {
+        if (i === 0) {
+            numSequence.push(0);
+        } else if (i === 1) {
+            numSequence.push(1);
+        } else {
+            numSequence.push(numSequence[i - 1] + numSequence[i - 2]);
+        }
+    }
+    return numSequence;
+}
+
+// console.log(fibs(8));
+
+// Recursive fibonacci sequence solution.
+function fibsRec(n, res = [0, 1]) {
+    if (n === 0) return [];
+    // If we have the value for the sequence, then return it without recalculating.
+    if (res[n]) {
+        return res[n];
+    }
+    // Otherwise, we must calculate it.
+    res[n] = fibsRec(n - 1, res) + fibsRec(n - 2, res);
+    return res[n];
+}
+
+// console.log(fibs(8));
+// console.log(fibs(1));
+// console.log(fibs(2));
+// console.log(fibs(0));
+// console.log(fibs(3));
+
+function mergeSort(arr) {
+    // Base case, array is size 1;
+    if (arr.length <= 1) {
+        return arr;
+    } else {
+        let leftHalf = mergeSort(arr.slice(0, arr.length / 2));
+        let rightHalf = mergeSort(arr.slice(arr.length / 2));
+
+        return helper(leftHalf, rightHalf);
+    }
+
+    // Performs the merging of both halves of an array (each half as input).
+    function helper(arr1, arr2) {
+        let sortedArray = [];
+        let cur1 = arr1.shift();
+        let cur2 = arr2.shift();
+        // Run while an element exists in one of the arrays.
+        while (cur1 !== undefined || cur2 !== undefined) {
+            // cur1 is empty.
+            if (cur1 == undefined) {
+                sortedArray.push(cur2);
+                cur2 = arr2.shift();
+            } else if (cur2 == undefined) {
+                // cur2 is empty
+                sortedArray.push(cur1);
+                cur1 = arr1.shift();
+            } else {
+                // Both have a value, so insert the smaller
+                if (cur1 <= cur2) {
+                    sortedArray.push(cur1);
+                    cur1 = arr1.shift();
+                } else {
+                    sortedArray.push(cur2);
+                    cur2 = arr2.shift();
+                }
+            }
+        }
+        return sortedArray;
+    }
+}
+
+console.log(mergeSort([]));
+console.log(mergeSort([73]));
+console.log(mergeSort([1, 2, 3, 4, 5]));
+console.log(mergeSort([3, 2, 1, 13, 8, 5, 0, 1]));
+console.log(mergeSort([105, 79, 100, 110]));
