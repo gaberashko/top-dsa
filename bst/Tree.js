@@ -69,7 +69,11 @@ class Tree {
                 // Case 1, curNode has no children.
                 if (!curNode.left && !curNode.right) {
                     // Remove the child from whichever side has cur node.
-                    if (parentNode.left == curNode) parentNode.left = null;
+                    // The node is the root of the tree.
+                    if (!parentNode) {
+                        this.root = null;
+                    } else if (parentNode.left == curNode)
+                        parentNode.left = null;
                     else if (parentNode.right == curNode)
                         parentNode.right = null;
                 }
@@ -80,26 +84,33 @@ class Tree {
                     (curNode.right && !curNode.left)
                 ) {
                     let childNode = curNode.left ?? curNode.right;
-                    if (parentNode.left == curNode) parentNode.left = childNode;
+                    // Node is the root.
+                    if (!parentNode) {
+                        this.root = childNode;
+                    } else if (parentNode.left == curNode)
+                        parentNode.left = childNode;
                     else if (parentNode.right == curNode)
                         parentNode.right = childNode;
                 } else {
                     // Case 3, curNode has two children.
                     // Get inorder successor
-                    let childNode = curNode.right;
+                    let successorParent = curNode;
+                    let successor = curNode.right;
                     // Traverse down to get smallest value in right subtree.
-                    while (childNode.left !== null) {
-                        childNode = childNode.left;
+                    while (successor.left !== null) {
+                        successorParent = successor;
+                        successor = successor.left;
                     }
-                    childNode.left = curNode.left;
-                    childNode.right = curNode.right;
-                    if (parentNode.left == curNode) parentNode.left = childNode;
-                    else if (parentNode.right == curNode)
-                        parentNode.right = childNode;
+                    curNode.data = successor.data;
+                    // If successor has right child, link the successors' parent to this right child.
+                    if (successorParent.left === successor) {
+                        successorParent.left = successor.right;
+                    } else {
+                        successorParent.right = successor.right;
+                    }
                 }
 
-                // Case 3, curNode has two children.
-                // Get inorder successor
+                return;
             } else {
                 parentNode = curNode;
                 // Current node doesn't match, so continue traversing.
